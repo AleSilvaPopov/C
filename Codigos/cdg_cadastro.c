@@ -5,6 +5,7 @@
 #include <string.h>
 #include <conio.h>
 
+//Modulos.
 void criar_arquivo();
 void cadastrar();
 void ver_cadastrados();
@@ -13,9 +14,10 @@ int vereficar_arv();
 void remover_cadastro();
 
 int main(){
-    setlocale(LC_ALL, "Portuguese");
-    int escolha;
+    setlocale(LC_ALL, "Portuguese"); // Deixar em Português.
+    int escolha; // Variavel para a escolha do usuário.
     
+    // verificar se já existe um arquivo .txt se não existir cria um.
     if(vereficar_arv() == 1){
         criar_arquivo();
     }
@@ -23,24 +25,30 @@ int main(){
         printf("-->Arquivo já existe.\n");
         Sleep(2000);
     }
+
     do{
-        system("cls");
-        menu();
-        escolha = getche();
+        system("cls"); // apaga tudo no terminar.
+        menu(); 
+        escolha = getche(); // lê a escolha do usuário, getche lê tabela ASCII.
+        //Acessa a escolha.
         switch (escolha){
             case '1':
-                // adicionar nome ao arquivo.
+                // Cadastra novo nome na lista.
                 cadastrar();
                 break;
             case '2':
-                // Ver lista.
+                // Imprime a lista.
                 ver_cadastrados();
                 break;
             case '3':
-                //Tirar nome da lista
+                //Remove nome da lista
                 remover_cadastro();
                 break;
             case '4':
+                //Procura na lista, de acordo com a escolha do usuário(Ex: Um nome, Sexo, Idade etc.)
+                break;
+            case '5':
+            //Finaliza o código.
                 system("cls");
                 printf("fi");
                 Sleep(500);
@@ -60,15 +68,17 @@ int main(){
                 Sleep(200);
                 break;
             default:
+                //Tratamento de erro caso o usuário digite algo inválido.
                 printf("\n\tErro ao digitar.\n\tEspere três segundos e tente novamente.\n");
                 Sleep(3000);
                 break;
         }
-    } while(escolha != '4');
+    } while(escolha != '5'); //Se escolha for diferente de 5 ele continua o programa.
 
     return 0;
 }
 
+//Menu com todas as opções.
 void menu(){
     printf("-----------------------------------------");
     printf("\n|\t    Menu Principal\t        |\n");
@@ -76,14 +86,14 @@ void menu(){
     printf("\n|\t[1]Adicionar nome a lista.\t|\n");
     printf("|\t[2]Ver lista.\t                |\n");
     printf("|\t[3]Tirar nome da lista\t        |\n");
-    printf("|\t[4]Sair do programa.\t        |\n");
+    printf("|\t[4]Procurar na lista.\t        |");
+    printf("|\t[5]Sair do programa.\t        |\n");
     printf("-----------------------------------------");
     printf("\n\tDigite sua escolha: ");
 }
 
+//Cria arquivo caso ele não exista.
 void criar_arquivo(){
-
-    //C:\Users\alexa\OneDrive\Área de Trabalho\Códigos
 
     FILE *aqv;
     aqv = fopen("ListaUsuarios.txt", "w");
@@ -100,6 +110,7 @@ void criar_arquivo(){
     fclose(aqv);
 }
 
+//Imprime todas as pessoas já cadastradas.
 void ver_cadastrados(){
     FILE *aqv;
 
@@ -127,6 +138,7 @@ void ver_cadastrados(){
     system("pause");
 }
 
+//Inseri na lista o código, nome e idade da pessoa cadastrada.
 void cadastrar(){
     unsigned int idade, cdg = 0;
     char nome[100], linha[100];
@@ -166,6 +178,7 @@ void cadastrar(){
     system("PAUSE");
 }
 
+//Verifica se o arquivo já existe para se não poder criar um novo.
 int vereficar_arv(){
     FILE *a;
     a = fopen("ListaUsuarios.txt", "r");
@@ -179,6 +192,7 @@ int vereficar_arv(){
     }
 }
 
+//Remove uma pessoa indesejada da lista.
 void remover_cadastro(){
     unsigned int remover, idade, cdg;
     char linha[100], nome[50];
