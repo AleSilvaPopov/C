@@ -86,7 +86,7 @@ void menu(){
     printf("\n|\t[1]Adicionar nome a lista.\t|\n");
     printf("|\t[2]Ver lista.\t                |\n");
     printf("|\t[3]Tirar nome da lista\t        |\n");
-    printf("|\t[4]Procurar na lista.\t        |");
+    printf("|\t[4]Procurar na lista.\t        |\n");
     printf("|\t[5]Sair do programa.\t        |\n");
     printf("-----------------------------------------");
     printf("\n\tDigite sua escolha: ");
@@ -122,15 +122,14 @@ void ver_cadastrados(){
     }
 
     unsigned int idade, cdg = 0;
-    char nome[50];
-    char linha[100];
+    char nome[50], linha[100], sexo;
 
     system("cls");
-    printf("Num. Nome\t\t\t\t| Idade\n");
+    printf("Num. Nome\t\t\t\t| Idade Sexo\n");
     printf("-----------------------------------------\n");
     while(fgets(linha, sizeof(linha), aqv) != NULL){
-        if(sscanf(linha, "%u %[^0-9] %u", &cdg, nome, &idade) == 3){
-            printf("%-4d %-30s\t| %3d\n", cdg, nome, idade);
+        if(sscanf(linha, "%u %[^0-9] %u %[^\n]c", &cdg, nome, &idade, &sexo) == 4){
+            printf("%-4d %-30s\t| %-3d %2c\n", cdg, nome, idade, sexo);
         }
         
     }   
@@ -141,7 +140,7 @@ void ver_cadastrados(){
 //Inseri na lista o código, nome e idade da pessoa cadastrada.
 void cadastrar(){
     unsigned int idade, cdg = 0;
-    char nome[100], linha[100];
+    char sexo, nome[100], linha[100];
     FILE *aqv;
 
     aqv = fopen("ListaUsuarios.txt", "r");
@@ -170,9 +169,13 @@ void cadastrar(){
     printf("Idade: ");
     scanf("%u", &idade);
 
-    fprintf(aqv, "%d %s %d\n",cdg, nome, idade);
+    printf("Sexo[M/F]");
+    scanf(" %c", &sexo);
 
-    printf("[%d %s %d] --> adicionado com sucesso.", cdg, nome, idade);
+    fprintf(aqv, "%d %s %d %c\n",cdg, nome, idade, sexo);
+
+
+    printf("[%d %s %d %c] --> adicionado com sucesso.", cdg, nome, idade, sexo);
     
     fclose(aqv);
     system("PAUSE");
@@ -195,11 +198,11 @@ int vereficar_arv(){
 //Remove uma pessoa indesejada da lista.
 void remover_cadastro(){
     unsigned int remover, idade, cdg;
-    char linha[100], nome[50];
+    char linha[100], nome[50], sexo;
 
     ver_cadastrados();
 
-    printf("Digite o cogido de quem deseja remover da lista: ");
+    printf("Digite o código de quem deseja remover da lista: ");
     scanf("%u", &remover);
 
     FILE *a, *b;
@@ -216,9 +219,9 @@ void remover_cadastro(){
     }
 
     while(fgets(linha, sizeof(linha), a) != NULL){
-        sscanf(linha, "%u %[^0-9] %u", &cdg, nome, &idade);
+        sscanf(linha, "%u %[^0-9] %u %c", &cdg, nome, &idade, &sexo);
         if(remover != cdg){
-             fprintf(b, "%d %s %d\n", cdg, nome, idade);
+             fprintf(b, "%d %s %d %c\n", cdg, nome, idade, sexo);
          }
     }
     fclose(a);
