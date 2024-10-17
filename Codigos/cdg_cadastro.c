@@ -5,6 +5,13 @@
 #include <string.h>
 #include <conio.h>
 
+typedef struct{
+    unsigned int cdg;
+    char nome[100];
+    unsigned int idade;
+    char sexo;
+}Pdados;
+
 //Modulos.
 void criar_arquivo();
 void cadastrar();
@@ -12,6 +19,8 @@ void ver_cadastrados();
 void menu();
 int vereficar_arv();
 void remover_cadastro();
+void procura();
+void busca(int);
 
 int main(){
     setlocale(LC_ALL, "Portuguese"); // Deixar em Português.
@@ -46,6 +55,7 @@ int main(){
                 break;
             case '4':
                 //Procura na lista, de acordo com a escolha do usuário(Ex: Um nome, Sexo, Idade etc.)
+                procura();
                 break;
             case '5':
             //Finaliza o código.
@@ -121,17 +131,16 @@ void ver_cadastrados(){
         return;
     }
 
-    unsigned int idade, cdg = 0;
-    char nome[50], linha[100], sexo;
+    Pdados pessoa;
+    char linha[100];
 
     system("cls");
     printf("Num. Nome\t\t\t\t| Idade Sexo\n");
     printf("-----------------------------------------\n");
     while(fgets(linha, sizeof(linha), aqv) != NULL){
-        if(sscanf(linha, "%u %[^0-9] %u %[^\n]c", &cdg, nome, &idade, &sexo) == 4){
-            printf("%-4d %-30s\t| %-3d %2c\n", cdg, nome, idade, sexo);
+        if(sscanf(linha, "%u %[^0-9] %u %[^\n]c", &pessoa.cdg, pessoa.nome, &pessoa.idade, &pessoa.sexo) == 4){
+            printf("%-4d %-30s\t| %-4d %3c\n", pessoa.cdg, pessoa.nome, pessoa.idade, pessoa.sexo);
         }
-        
     }   
     fclose(aqv);
     system("pause");
@@ -139,20 +148,22 @@ void ver_cadastrados(){
 
 //Inseri na lista o código, nome e idade da pessoa cadastrada.
 void cadastrar(){
-    unsigned int idade, cdg = 0;
-    char sexo, nome[100], linha[100];
+    Pdados pessoa;
+    char linha[100];
     FILE *aqv;
+
+    pessoa.cdg = 0;
 
     aqv = fopen("ListaUsuarios.txt", "r");
     if(aqv != NULL){
         while(fgets(linha, sizeof(linha), aqv) != NULL){
-            sscanf(linha, "%u", &cdg);
+            sscanf(linha, "%u", &pessoa.cdg);
         }
-        cdg += 1;
+        pessoa.cdg += 1;
         fclose(aqv);
     }
     else{
-        cdg = 1;
+        pessoa.cdg = 1;
     }
 
     aqv = fopen("ListaUsuarios.txt", "a");
@@ -163,19 +174,19 @@ void cadastrar(){
     }
     fflush(stdin);
     printf("\nNome: ");
-    fgets(nome, sizeof(nome), stdin);
-    nome[strcspn(nome, "\n")] = 0;
+    fgets(pessoa.nome, sizeof(pessoa.nome), stdin);
+    pessoa.nome[strcspn(pessoa.nome, "\n")] = 0;
 
     printf("Idade: ");
-    scanf("%u", &idade);
+    scanf("%u", &pessoa.idade);
 
     printf("Sexo[M/F]");
-    scanf(" %c", &sexo);
+    scanf(" %c", &pessoa.sexo);
 
-    fprintf(aqv, "%d %s %d %c\n",cdg, nome, idade, sexo);
+    fprintf(aqv, "%d %s %d %c\n",pessoa.cdg, pessoa.nome, pessoa.idade, pessoa.sexo);
 
 
-    printf("[%d %s %d %c] --> adicionado com sucesso.", cdg, nome, idade, sexo);
+    printf("[%d %s %d %c] --> adicionado com sucesso.", pessoa.cdg, pessoa.nome, pessoa.idade, pessoa.sexo);
     
     fclose(aqv);
     system("PAUSE");
@@ -197,8 +208,9 @@ int vereficar_arv(){
 
 //Remove uma pessoa indesejada da lista.
 void remover_cadastro(){
-    unsigned int remover, idade, cdg;
-    char linha[100], nome[50], sexo;
+    Pdados pessoa;
+    char linha[100];
+    int remover;
 
     ver_cadastrados();
 
@@ -219,9 +231,9 @@ void remover_cadastro(){
     }
 
     while(fgets(linha, sizeof(linha), a) != NULL){
-        sscanf(linha, "%u %[^0-9] %u %c", &cdg, nome, &idade, &sexo);
-        if(remover != cdg){
-             fprintf(b, "%d %s %d %c\n", cdg, nome, idade, sexo);
+        sscanf(linha, "%u %[^0-9] %u %c", &pessoa.cdg, pessoa.nome, &pessoa.idade, &pessoa.sexo);
+        if(remover != pessoa.cdg){
+             fprintf(b, "%d %s%d %c\n", pessoa.cdg, pessoa.nome, pessoa.idade, pessoa.sexo);
          }
     }
     fclose(a);
@@ -232,4 +244,61 @@ void remover_cadastro(){
 
     printf("Cadastro removido com sucesso.\n");
     system("PAUSE");
+}
+
+void procura(){
+    system("cls");
+
+    unsigned int escolha;
+
+    do{
+        printf("\tO que deseja procurar: \n");
+        printf("\t[1] Femininos.\n\t[2] Masculinos.\n\t[3] Código\n\t[4] Idade\n\t[5] Sair\n");
+        printf("\tSua esolha: ");
+        scanf("%d", &escolha);
+
+        switch (escolha)
+        {
+        case 1:
+            //Buscar todos do sexo Feminino.
+            busca(1);
+            break;
+        case 2:
+            //Buscar todos do sexo Masculino.
+            break;
+        case 3:
+            //Buscar uma unica pessoa com o cosigo informado.
+            break;
+        case 4:
+            //Buscar todos com a idade informada.
+            break;
+        case 5:
+            printf("Voltando pro menu principal.\n");
+            Sleep(1000);
+            break;
+        
+        default:
+            printf("Erro, tente novamente em 2 segundos\n");
+            Sleep(2000);
+            break;
+        }
+    }while(escolha != 5);
+}
+
+void busca(int n){
+    FILE *a;
+
+    a = fopen("ListaUsuarios.txt", "r");
+    if(a == NULL){
+        printf("Erro!\n");
+        return;
+    }
+    else{
+        if(n == 1){
+            //Busca Feminina
+         }
+        if(n == 2){
+            //Busca Masculina
+        }
+    }
 }
