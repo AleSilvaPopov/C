@@ -210,7 +210,7 @@ int vereficar_arv(){
 void remover_cadastro(){
     Pdados pessoa;
     char linha[100];
-    int remover;
+    unsigned int remover;
 
     ver_cadastrados();
 
