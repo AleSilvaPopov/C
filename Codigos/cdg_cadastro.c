@@ -97,6 +97,7 @@ void menu(){
     printf("|\t[2]Ver lista.\t                |\n");
     printf("|\t[3]Tirar nome da lista\t        |\n");
     printf("|\t[4]Procurar na lista.\t        |\n");
+    printf("|\t[?]?????????????????.\t        |\n");
     printf("|\t[5]Sair do programa.\t        |\n");
     printf("-----------------------------------------");
     printf("\n\tDigite sua escolha: ");
@@ -220,7 +221,7 @@ void remover_cadastro(){
     FILE *a, *b;
     a = fopen("ListaUsuarios.txt", "r");
     if(a == NULL){
-        printf("Erro, ao abrir o arquivo.txt.\n");
+        printf("Erro, ao abrir o arquivo .txt.\n");
         return;
     }
     b = fopen("temp.txt", "w");
@@ -233,7 +234,7 @@ void remover_cadastro(){
     while(fgets(linha, sizeof(linha), a) != NULL){
         sscanf(linha, "%u %[^0-9] %u %c", &pessoa.cdg, pessoa.nome, &pessoa.idade, &pessoa.sexo);
         if(remover != pessoa.cdg){
-             fprintf(b, "%d %s%d %c\n", pessoa.cdg, pessoa.nome, pessoa.idade, pessoa.sexo);
+             fprintf(b, "%u %s%u %c\n", pessoa.cdg, pessoa.nome, pessoa.idade, pessoa.sexo);
          }
     }
     fclose(a);
@@ -247,11 +248,11 @@ void remover_cadastro(){
 }
 
 void procura(){
-    system("cls");
 
     unsigned int escolha;
 
     do{
+        system("cls");
         printf("\tO que deseja procurar: \n");
         printf("\t[1] Femininos.\n\t[2] Masculinos.\n\t[3] Código\n\t[4] Idade\n\t[5] Sair\n");
         printf("\tSua esolha: ");
@@ -261,23 +262,32 @@ void procura(){
         {
         case 1:
             //Buscar todos do sexo Feminino.
+            system("cls");
             busca(1);
             break;
         case 2:
             //Buscar todos do sexo Masculino.
+            system("cls");
+            busca(2);
             break;
         case 3:
-            //Buscar uma unica pessoa com o cosigo informado.
+            //Buscar uma unica pessoa com o codigo informado.
+            system("cls");
+            busca(3);
             break;
         case 4:
             //Buscar todos com a idade informada.
+            system("cls");
+            busca(4);
             break;
         case 5:
+            system("cls");
             printf("Voltando pro menu principal.\n");
             Sleep(1000);
             break;
         
         default:
+            system("cls");
             printf("Erro, tente novamente em 2 segundos\n");
             Sleep(2000);
             break;
@@ -287,6 +297,9 @@ void procura(){
 
 void busca(int n){
     FILE *a;
+    char linha[100];
+    Pdados pessoa;
+    unsigned int cdg, flag = 0;
 
     a = fopen("ListaUsuarios.txt", "r");
     if(a == NULL){
@@ -296,9 +309,71 @@ void busca(int n){
     else{
         if(n == 1){
             //Busca Feminina
-         }
+            printf("\n");
+            while(fgets(linha, sizeof(linha), a) != NULL){
+                sscanf(linha, "%u %[^0-9] %d %c", &pessoa.cdg, pessoa.nome, &pessoa.idade, &pessoa.sexo);
+                if(pessoa.sexo == 'F' || pessoa.sexo == 'f'){
+                    if(flag == 0){
+                        printf("Mulheres encontradas: \n");
+                        flag++;
+                    }
+                    printf("%d %s %d %c\n", pessoa.cdg, pessoa.nome, pessoa.idade, pessoa.sexo);
+                }
+            }
+            if(flag == 0){
+                printf("Nenhuma mulher encontrada.\n");
+            }
+            system("PAUSE");
+        }
         if(n == 2){
             //Busca Masculina
+            while(fgets(linha, sizeof(linha), a) != NULL){
+                sscanf(linha, "%u %[^0-9] %d %c", &pessoa.cdg, pessoa.nome, &pessoa.idade, &pessoa.sexo);
+                if(pessoa.sexo == 'M' || pessoa.sexo == 'm'){
+                    if(flag == 0){
+                        printf("Homens encontrados: \n");
+                        flag++;
+                    }
+                    printf("%d %s %d %c\n", pessoa.cdg, pessoa.nome, pessoa.idade, pessoa.sexo);
+                }   
+            }
+            if(flag == 0){
+                printf("Nenhum homem encontrado.\n");
+            }
+            system("pause");
+        }
+        if(n == 3){
+            printf("Informe o codigo: ");
+            scanf("%u", &cdg);
+            while(fgets(linha, sizeof(linha), a) != NULL){
+                sscanf(linha, "%u %[^0-9] %u %c", &pessoa.cdg, pessoa.nome, &pessoa.idade, &pessoa.sexo);
+                if(pessoa.cdg == cdg){
+                    flag++;
+                    printf("Usuario: %d %s %d %c\n", pessoa.cdg, pessoa.nome, pessoa.idade, pessoa.sexo);
+                }
+            }
+            if(flag == 0){
+                printf("Cadastro não encontrado.\n");
+            }
+            system("PAUSE");
+        }
+        if(n == 4){
+             printf("Informe a idade: ");
+            scanf("%u", &cdg);
+            while(fgets(linha, sizeof(linha), a) != NULL){
+                sscanf(linha, "%u %[^0-9] %d %c", &pessoa.cdg, pessoa.nome, &pessoa.idade, &pessoa.sexo);
+                if(pessoa.idade == cdg){
+                    if(flag == 0){
+                        printf("Pessoas de %u anos encontradas: \n", cdg);
+                    }
+                    flag++;
+                    printf("%d %s %d %c\n", pessoa.cdg, pessoa.nome, pessoa.idade, pessoa.sexo);
+                }
+            }
+            if(flag == 0){
+                printf("Ninguem com essa idade foi encontrado.\n");
+            }
+            system("PAUSE");
         }
     }
 }
