@@ -24,7 +24,7 @@ void busca(int);
 
 int main(){
     setlocale(LC_ALL, "Portuguese"); // Deixar em Português.
-    int escolha; // Variavel para a escolha do usuário.
+    int escolha, cont = 0; // Variavel para a escolha do usuário.
     
     // verificar se já existe um arquivo .txt se não existir cria um.
     if(vereficar_arv() == 1){
@@ -78,8 +78,18 @@ int main(){
                 break;
             default:
                 //Tratamento de erro caso o usuário digite algo inválido.
-                printf("\n\tErro ao digitar.\n\tEspere três segundos e tente novamente.\n");
-                Sleep(3000);
+                system("cls");
+                cont = 3;
+                printf("Erro ao digitar.\nTente novamente em %d segundo. \n", cont);
+                Sleep(1000);
+                system("cls");
+                cont--;
+                printf("Erro ao digitar.\nTente novamente em %d segundo. \n", cont);
+                Sleep(1000);
+                system("cls");
+                cont--;
+                printf("Erro ao digitar.\nTente novamente em %d segundo. \n", cont);
+                Sleep(1000);
                 break;
         }
     } while(escolha != '6'); //Se escolha for diferente de 6 ele continua o programa.
@@ -268,6 +278,7 @@ void procura(){
     */
 
     unsigned int escolha;
+    int cont = 0;
 
     do{
         system("cls");
@@ -305,9 +316,14 @@ void procura(){
             break;
         
         default:
+            cont = 2;
             system("cls");
-            printf("Erro, tente novamente em 2 segundos\n");
-            Sleep(2000);
+            printf("Erro, tente novamente em %d segundos\n", cont);
+            Sleep(1000);
+            system("cls");
+            cont--;
+            printf("Erro, tente novamente em %d segundos\n", cont);
+            Sleep(1000);
             break;
         }
     }while(escolha != 5);
