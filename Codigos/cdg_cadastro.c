@@ -31,33 +31,32 @@ int main(){
         criar_arquivo();
     }
     else{
-        printf("-->Arquivo já existe.\n");
-        Sleep(2000);
+        printf("|Arquivo já existe.|\n");
+        Sleep(1000);
     }
 
     do{
-        system("cls"); // apaga tudo no terminar.
+        system("cls"); // apaga tudo no terminal.
         menu(); 
         escolha = getche(); // lê a escolha do usuário, getche lê tabela ASCII.
         //Acessa a escolha.
         switch (escolha){
             case '1':
-                // Cadastra novo nome na lista.
-                cadastrar();
+                cadastrar(); // Cadastra novo nome na lista.
                 break;
             case '2':
-                // Imprime a lista.
-                ver_cadastrados();
+                ver_cadastrados(); // Imprime a lista.
                 break;
             case '3':
-                //Remove nome da lista
-                remover_cadastro();
+                remover_cadastro(); //Remove nome da lista.
                 break;
             case '4':
-                //Procura na lista, de acordo com a escolha do usuário(Ex: Um nome, Sexo, Idade etc.)
-                procura();
+                procura(); //Procura na lista, de acordo com a escolha do usuário(Ex: Um nome, Sexo, Idade etc.)
                 break;
             case '5':
+                //??????
+                break;
+            case '6':
             //Finaliza o código.
                 system("cls");
                 printf("fi");
@@ -83,7 +82,7 @@ int main(){
                 Sleep(3000);
                 break;
         }
-    } while(escolha != '5'); //Se escolha for diferente de 5 ele continua o programa.
+    } while(escolha != '6'); //Se escolha for diferente de 6 ele continua o programa.
 
     return 0;
 }
@@ -97,14 +96,17 @@ void menu(){
     printf("|\t[2]Ver lista.\t                |\n");
     printf("|\t[3]Tirar nome da lista\t        |\n");
     printf("|\t[4]Procurar na lista.\t        |\n");
-    printf("|\t[?]?????????????????.\t        |\n");
-    printf("|\t[5]Sair do programa.\t        |\n");
+    printf("|\t[5]?????????????????.\t        |\n");
+    printf("|\t[6]Sair do programa.\t        |\n");
     printf("-----------------------------------------");
     printf("\n\tDigite sua escolha: ");
 }
 
-//Cria arquivo caso ele não exista.
 void criar_arquivo(){
+    /*
+        Não recebe nenhum escopo.
+        Cria o arquivo onde será armazenado os dados caso ele não existe.
+    */
 
     FILE *aqv;
     aqv = fopen("ListaUsuarios.txt", "w");
@@ -121,8 +123,11 @@ void criar_arquivo(){
     fclose(aqv);
 }
 
-//Imprime todas as pessoas já cadastradas.
 void ver_cadastrados(){
+    /*
+        Não recebe escopo.
+        Mostra uma lista com todos os dados cadastrados.
+    */
     FILE *aqv;
 
     aqv = fopen("ListaUsuarios.txt", "r");
@@ -136,19 +141,23 @@ void ver_cadastrados(){
     char linha[100];
 
     system("cls");
-    printf("Num. Nome\t\t\t\t| Idade Sexo\n");
-    printf("-----------------------------------------\n");
+    printf("Num. Nome\t\t\t\t| Idade | Sexo |\n");
+    printf("------------------------------------------------------\n");
     while(fgets(linha, sizeof(linha), aqv) != NULL){
         if(sscanf(linha, "%u %[^0-9] %u %[^\n]c", &pessoa.cdg, pessoa.nome, &pessoa.idade, &pessoa.sexo) == 4){
-            printf("%-4d %-30s\t| %-4d %3c\n", pessoa.cdg, pessoa.nome, pessoa.idade, pessoa.sexo);
+            printf("%-4d %-30s\t| %4d  |%3c   |\n", pessoa.cdg, pessoa.nome, pessoa.idade, pessoa.sexo);
         }
     }   
     fclose(aqv);
     system("pause");
 }
 
-//Inseri na lista o código, nome e idade da pessoa cadastrada.
 void cadastrar(){
+    /*
+        Não recebe escopo.
+        Cadastra na lista os dados informado pelo usuário.
+        Já adiciona o código.
+     */
     Pdados pessoa;
     char linha[100];
     FILE *aqv;
@@ -193,8 +202,11 @@ void cadastrar(){
     system("PAUSE");
 }
 
-//Verifica se o arquivo já existe para se não poder criar um novo.
 int vereficar_arv(){
+    /*
+        Não recebe escopo.
+        Verifica se já existe um arquivo com dados salvos.
+     */
     FILE *a;
     a = fopen("ListaUsuarios.txt", "r");
     if(a == NULL){
@@ -207,8 +219,11 @@ int vereficar_arv(){
     }
 }
 
-//Remove uma pessoa indesejada da lista.
 void remover_cadastro(){
+    /*
+        Não receve escopo.
+        Remove um certo dado da lista de acordo com a escolha do usuário.
+    */
     Pdados pessoa;
     char linha[100];
     unsigned int remover;
@@ -248,13 +263,16 @@ void remover_cadastro(){
 }
 
 void procura(){
+    /*
+        Da novas opçôes de busca para o usuário.
+    */
 
     unsigned int escolha;
 
     do{
         system("cls");
         printf("\tO que deseja procurar: \n");
-        printf("\t[1] Femininos.\n\t[2] Masculinos.\n\t[3] Código\n\t[4] Idade\n\t[5] Sair\n");
+        printf("\t[1] Femininos.\n\t[2] Masculinos.\n\t[3] Código\n\t[4] Idade\n\t[5] Voltar\n");
         printf("\tSua esolha: ");
         scanf("%d", &escolha);
 
@@ -296,6 +314,9 @@ void procura(){
 }
 
 void busca(int n){
+    /*
+        Busca algo na lista de acordo com a escolha do usuario.
+    */
     FILE *a;
     char linha[100];
     Pdados pessoa;
@@ -343,6 +364,7 @@ void busca(int n){
             system("pause");
         }
         if(n == 3){
+            //Busca pelo codigo.
             printf("Informe o codigo: ");
             scanf("%u", &cdg);
             while(fgets(linha, sizeof(linha), a) != NULL){
@@ -358,6 +380,7 @@ void busca(int n){
             system("PAUSE");
         }
         if(n == 4){
+            //Busca pela Idade.
              printf("Informe a idade: ");
             scanf("%u", &cdg);
             while(fgets(linha, sizeof(linha), a) != NULL){
@@ -367,7 +390,7 @@ void busca(int n){
                         printf("Pessoas de %u anos encontradas: \n", cdg);
                     }
                     flag++;
-                    printf("%d %s %d %c\n", pessoa.cdg, pessoa.nome, pessoa.idade, pessoa.sexo);
+                    printf("Codigo: %d | Nome --> %s | Sexo --> %c\n", pessoa.cdg, pessoa.nome, pessoa.sexo);
                 }
             }
             if(flag == 0){
