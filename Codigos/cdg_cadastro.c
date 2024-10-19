@@ -16,15 +16,16 @@ typedef struct{
 void criar_arquivo();
 void cadastrar();
 void ver_cadastrados();
-void menu();
+void menu(int);
 int vereficar_arv();
 void remover_cadastro();
 void procura();
 void busca(int);
+void erro();
 
 int main(){
     setlocale(LC_ALL, "Portuguese"); // Deixar em Português.
-    int escolha, cont = 0; // Variavel para a escolha do usuário.
+    int escolha; // Variavel para a escolha do usuário.
     
     // verificar se já existe um arquivo .txt se não existir cria um.
     if(vereficar_arv() == 1){
@@ -37,7 +38,7 @@ int main(){
 
     do{
         system("cls"); // apaga tudo no terminal.
-        menu(); 
+        menu(1); 
         escolha = getche(); // lê a escolha do usuário, getche lê tabela ASCII.
         //Acessa a escolha.
         switch (escolha){
@@ -78,18 +79,7 @@ int main(){
                 break;
             default:
                 //Tratamento de erro caso o usuário digite algo inválido.
-                system("cls");
-                cont = 3;
-                printf("Erro ao digitar.\nTente novamente em %d segundo. \n", cont);
-                Sleep(1000);
-                system("cls");
-                cont--;
-                printf("Erro ao digitar.\nTente novamente em %d segundo. \n", cont);
-                Sleep(1000);
-                system("cls");
-                cont--;
-                printf("Erro ao digitar.\nTente novamente em %d segundo. \n", cont);
-                Sleep(1000);
+                erro();
                 break;
         }
     } while(escolha != '6'); //Se escolha for diferente de 6 ele continua o programa.
@@ -98,8 +88,9 @@ int main(){
 }
 
 //Menu com todas as opções.
-void menu(){
-    printf("-----------------------------------------");
+void menu(int n){
+    if(n == 1){
+        printf("-----------------------------------------");
     printf("\n|\t    Menu Principal\t        |\n");
     printf("-----------------------------------------");
     printf("\n|\t[1]Adicionar nome a lista.\t|\n");
@@ -110,6 +101,14 @@ void menu(){
     printf("|\t[6]Sair do programa.\t        |\n");
     printf("-----------------------------------------");
     printf("\n\tDigite sua escolha: ");
+
+    }
+    if(n == 2){
+        system("cls");
+        printf("\tO que deseja procurar: \n");
+        printf("\t[1] Femininos.\n\t[2] Masculinos.\n\t[3] Código\n\t[4] Idade\n\t[5] Voltar\n");
+        printf("\tSua esolha: ");
+    }
 }
 
 void criar_arquivo(){
@@ -278,13 +277,9 @@ void procura(){
     */
 
     unsigned int escolha;
-    int cont = 0;
 
     do{
-        system("cls");
-        printf("\tO que deseja procurar: \n");
-        printf("\t[1] Femininos.\n\t[2] Masculinos.\n\t[3] Código\n\t[4] Idade\n\t[5] Voltar\n");
-        printf("\tSua esolha: ");
+        menu(2);
         scanf("%d", &escolha);
 
         switch (escolha)
@@ -316,14 +311,7 @@ void procura(){
             break;
         
         default:
-            cont = 2;
-            system("cls");
-            printf("Erro, tente novamente em %d segundos\n", cont);
-            Sleep(1000);
-            system("cls");
-            cont--;
-            printf("Erro, tente novamente em %d segundos\n", cont);
-            Sleep(1000);
+            erro();
             break;
         }
     }while(escolha != 5);
@@ -336,7 +324,7 @@ void busca(int n){
     FILE *a;
     char linha[100];
     Pdados pessoa;
-    unsigned int cdg, flag = 0;
+    unsigned int cdg, flag = 0, flag2 = 0;
 
     a = fopen("ListaUsuarios.txt", "r");
     if(a == NULL){
@@ -344,75 +332,77 @@ void busca(int n){
         return;
     }
     else{
-        if(n == 1){
+        while(fgets(linha, sizeof(linha), a) != NULL){
+            sscanf(linha, "%u %[^0-9] %d %c", &pessoa.cdg, pessoa.nome, &pessoa.idade, &pessoa.sexo);
+            if(n == 1){
             //Busca Feminina
-            printf("\n");
-            while(fgets(linha, sizeof(linha), a) != NULL){
-                sscanf(linha, "%u %[^0-9] %d %c", &pessoa.cdg, pessoa.nome, &pessoa.idade, &pessoa.sexo);
                 if(pessoa.sexo == 'F' || pessoa.sexo == 'f'){
-                    if(flag == 0){
+                    if(flag2 == 0){
                         printf("Mulheres encontradas: \n");
-                        flag++;
+                        flag2++;
                     }
                     printf("%d %s %d %c\n", pessoa.cdg, pessoa.nome, pessoa.idade, pessoa.sexo);
-                }
-            }
-            if(flag == 0){
-                printf("Nenhuma mulher encontrada.\n");
-            }
-            system("PAUSE");
-        }
-        if(n == 2){
-            //Busca Masculina
-            while(fgets(linha, sizeof(linha), a) != NULL){
-                sscanf(linha, "%u %[^0-9] %d %c", &pessoa.cdg, pessoa.nome, &pessoa.idade, &pessoa.sexo);
-                if(pessoa.sexo == 'M' || pessoa.sexo == 'm'){
-                    if(flag == 0){
-                        printf("Homens encontrados: \n");
-                        flag++;
-                    }
-                    printf("%d %s %d %c\n", pessoa.cdg, pessoa.nome, pessoa.idade, pessoa.sexo);
-                }   
-            }
-            if(flag == 0){
-                printf("Nenhum homem encontrado.\n");
-            }
-            system("pause");
-        }
-        if(n == 3){
-            //Busca pelo codigo.
-            printf("Informe o codigo: ");
-            scanf("%u", &cdg);
-            while(fgets(linha, sizeof(linha), a) != NULL){
-                sscanf(linha, "%u %[^0-9] %u %c", &pessoa.cdg, pessoa.nome, &pessoa.idade, &pessoa.sexo);
-                if(pessoa.cdg == cdg){
                     flag++;
-                    printf("Usuario: %d %s %d %c\n", pessoa.cdg, pessoa.nome, pessoa.idade, pessoa.sexo);
                 }
             }
-            if(flag == 0){
-                printf("Cadastro não encontrado.\n");
+            if(n == 2){
+                //Busca Masculina
+                if(pessoa.sexo == 'M' || pessoa.sexo == 'm'){
+                    if(flag2 == 0){
+                        printf("Homens encontrados: \n");
+                        flag2++;
+                    }
+                        printf("%d %s %d %c\n", pessoa.cdg, pessoa.nome, pessoa.idade, pessoa.sexo);
+                        flag++;
+                }
             }
-            system("PAUSE");
-        }
-        if(n == 4){
-            //Busca pela Idade.
-             printf("Informe a idade: ");
-            scanf("%u", &cdg);
-            while(fgets(linha, sizeof(linha), a) != NULL){
-                sscanf(linha, "%u %[^0-9] %d %c", &pessoa.cdg, pessoa.nome, &pessoa.idade, &pessoa.sexo);
+            if(n == 3){
+                //Busca pelo codigo.
+                if(flag2 == 0){
+                    printf("Informe o codigo: ");
+                    scanf("%u", &cdg);
+                    flag2++;
+                }
+                if(pessoa.cdg == cdg){
+                    printf("Usuario: %d %s %d %c\n", pessoa.cdg, pessoa.nome, pessoa.idade, pessoa.sexo);
+                    flag++;
+                }
+            }
+            if(n == 4){
+                //Busca pela Idade.
+                if(flag2 == 0){
+                    printf("Informe a idade: ");
+                    scanf("%u", &cdg);
+                    flag2++;
+                }
                 if(pessoa.idade == cdg){
                     if(flag == 0){
                         printf("Pessoas de %u anos encontradas: \n", cdg);
+                        flag++;
                     }
-                    flag++;
                     printf("Codigo: %d | Nome --> %s | Sexo --> %c\n", pessoa.cdg, pessoa.nome, pessoa.sexo);
                 }
             }
-            if(flag == 0){
-                printf("Ninguem com essa idade foi encontrado.\n");
-            }
-            system("PAUSE");
         }
     }
+    if(flag == 0){
+        printf("Ninguém com essas informações encontrado.\n");
+    }
+    system("pause");
+}
+
+void erro(){
+    int cont;
+    system("cls");
+                cont = 3;
+                printf("Erro ao digitar.\nTente novamente em %d segundo. \n", cont);
+                Sleep(1000);
+                system("cls");
+                cont--;
+                printf("Erro ao digitar.\nTente novamente em %d segundo. \n", cont);
+                Sleep(1000);
+                system("cls");
+                cont--;
+                printf("Erro ao digitar.\nTente novamente em %d segundo. \n", cont);
+                Sleep(1000);
 }
