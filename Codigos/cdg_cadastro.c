@@ -5,15 +5,23 @@
 #include <string.h>
 #include <conio.h>
 
+/*typedef struct{
+    int dia;
+    int mes;
+    int ano;
+}data;*/
+
 typedef struct{
     unsigned int cdg;
     char nome[100];
     unsigned int idade;
     char sexo;
+    //data nascimento;
 }Pdados;
 
 //Modulos.
 void criar_arquivo();
+Pdados* ler_novo_cadastro();
 void cadastrar();
 void ver_cadastrados();
 void menu(int);
@@ -27,6 +35,7 @@ void novo_arquivo(int, unsigned int);
 int main(){
     setlocale(LC_ALL, "Portuguese"); // Deixar em Português.
     int escolha; // Variavel para a escolha do usuário.
+    Pdados *pessoa;
     
     // verificar se já existe um arquivo .txt se não existir cria um.
     if(vereficar_arv() == 1){
@@ -44,7 +53,8 @@ int main(){
         //Acessa a escolha.
         switch (escolha){
             case '1':
-                cadastrar(); // Cadastra novo nome na lista.
+                pessoa = ler_novo_cadastro();
+                cadastrar(pessoa); // Cadastra novo nome na lista.
                 break;
             case '2':
                 ver_cadastrados(); // Imprime a lista.
@@ -113,11 +123,6 @@ void menu(int n){
 }
 
 void criar_arquivo(){
-    /*
-        Não recebe nenhum escopo.
-        Cria o arquivo onde será armazenado os dados caso ele não existe.
-    */
-
     FILE *aqv;
     aqv = fopen("ListaUsuarios.txt", "w");
     if(aqv == NULL){
@@ -129,7 +134,6 @@ void criar_arquivo(){
         printf("\nSucesso ao abrir o arquivo.\n");
         Sleep(2000);
     }
-
     fclose(aqv);
 }
 
@@ -147,69 +151,21 @@ void ver_cadastrados(){
         return;
     }
 
-    Pdados pessoa;
+    Pdados *p;
+    p = malloc(sizeof(Pdados));
     char linha[100];
 
     system("cls");
     printf("Num. Nome\t\t\t\t| Idade | Sexo |\n");
     printf("------------------------------------------------------\n");
     while(fgets(linha, sizeof(linha), aqv) != NULL){
-        if(sscanf(linha, "%u %[^0-9] %u %[^\n]c", &pessoa.cdg, pessoa.nome, &pessoa.idade, &pessoa.sexo) == 4){
-            printf("%-4d %-30s\t| %4d  |%3c   |\n", pessoa.cdg, pessoa.nome, pessoa.idade, pessoa.sexo);
+        if(sscanf(linha, "%u %[^0-9] %u %[^\n]c", &p->cdg, p->nome, &p->idade, &p->sexo) == 4){
+            printf("%-4d %-30s\t| %4d  |%3c   |\n", p->cdg, p->nome, p->idade, p->sexo);
         }
-    }   
+    }
+    free(p);
     fclose(aqv);
     system("pause");
-}
-
-void cadastrar(){
-    /*
-        Não recebe escopo.
-        Cadastra na lista os dados informado pelo usuário.
-        Já adiciona o código.
-     */
-    Pdados pessoa;
-    char linha[100];
-    FILE *aqv;
-
-    pessoa.cdg = 0;
-
-    aqv = fopen("ListaUsuarios.txt", "r");
-    if(aqv != NULL){
-        while(fgets(linha, sizeof(linha), aqv) != NULL){
-            sscanf(linha, "%u", &pessoa.cdg);
-        }
-        pessoa.cdg += 1;
-        fclose(aqv);
-    }
-    else{
-        pessoa.cdg = 1;
-    }
-
-    aqv = fopen("ListaUsuarios.txt", "a");
-    if(aqv == NULL){
-        printf("Erro ao abrir arquivo.\n");
-        Sleep(2000);
-        return;
-    }
-    fflush(stdin);
-    printf("\nNome: ");
-    fgets(pessoa.nome, sizeof(pessoa.nome), stdin);
-    pessoa.nome[strcspn(pessoa.nome, "\n")] = 0;
-
-    printf("Idade: ");
-    scanf("%u", &pessoa.idade);
-
-    printf("Sexo[M/F]");
-    scanf(" %c", &pessoa.sexo);
-
-    fprintf(aqv, "%d %s %d %c\n",pessoa.cdg, pessoa.nome, pessoa.idade, pessoa.sexo);
-
-
-    printf("[%d %s %d %c] --> adicionado com sucesso.", pessoa.cdg, pessoa.nome, pessoa.idade, pessoa.sexo);
-    
-    fclose(aqv);
-    system("PAUSE");
 }
 
 int vereficar_arv(){
@@ -227,6 +183,60 @@ int vereficar_arv(){
         fclose(a);
         return 0;
     }
+}
+
+Pdados* ler_novo_cadastro(){
+    Pdados *p;
+    p = malloc(sizeof(Pdados));
+
+    if(p){
+        getchar();
+        printf("\nNome:");
+        scanf("%[^\n]s", p->nome);
+        printf("Idade: ");
+        scanf("%u", &p->idade);
+        printf("Sexo[M/F]: ");
+        scanf(" %c", &p->sexo);
+        /*printf("\nAno de nascimento[dd mm aaaa]: ");
+        scanf("%2d %2d %4d", &p->nascimento.dia, &p->nascimento.mes, &p->nascimento.ano);*/
+        return p;
+    }
+    else{
+        printf("\n\tErro em alocar a memoria.\n");
+        return NULL;
+    }
+}
+
+void cadastrar(Pdados *p){
+    char linha[100];
+    FILE *aqv;
+
+    p->cdg = 0;
+
+    aqv = fopen("ListaUsuarios.txt", "r");
+    if(aqv != NULL){
+        while(fgets(linha, sizeof(linha), aqv) != NULL){
+            sscanf(linha, "%u", &p->cdg);
+        }
+        p->cdg += 1;
+        fclose(aqv);
+    }
+    else{
+        p->cdg = 1;
+    }
+
+    aqv = fopen("ListaUsuarios.txt", "a");
+    if(aqv == NULL){
+        printf("Erro ao abrir arquivo.\n");
+        erro();
+        return;
+    }
+    fflush(stdin);
+    fprintf(aqv, "%d %s %d %c\n",p->cdg, p->nome, p->idade, p->sexo);
+    printf("[%d %s %d %c] --> Dados adicionados com sucesso.", p->cdg, p->nome, p->idade, p->sexo);
+    
+    fclose(aqv);
+    system("PAUSE");
 }
 
 void remover_cadastro(){
@@ -315,7 +325,7 @@ void procura(){
             erro();
             break;
         }
-        if(escolha != 5){
+        if(escolha != 5 && escolha != 3){
             printf("Deseja um arquivo com essa lista:[S/N]: ");
             scanf(" %c", &Narq);
             if(Narq == 'S' || Narq == 's'){
