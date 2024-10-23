@@ -5,18 +5,18 @@
 #include <string.h>
 #include <conio.h>
 
-/*typedef struct{
+typedef struct{
     int dia;
     int mes;
     int ano;
-}data;*/
+}data;
 
 typedef struct{
     unsigned int cdg;
     char nome[100];
     unsigned int idade;
     char sexo;
-    //data nascimento;
+    data Dnasc;
 }Pdados;
 
 //Modulos.
@@ -153,14 +153,14 @@ void ver_cadastrados(){
 
     Pdados *p;
     p = malloc(sizeof(Pdados));
-    char linha[100];
+    char linha[150];
 
     system("cls");
-    printf("Num. Nome\t\t\t\t| Idade | Sexo |\n");
-    printf("------------------------------------------------------\n");
+    printf("Num. Nome\t\t\t\t| Idade | Sexo | Data de Nasc.|\n");
+    printf("-----------------------------------------------------------------------\n");
     while(fgets(linha, sizeof(linha), aqv) != NULL){
-        if(sscanf(linha, "%u %[^0-9] %u %[^\n]c", &p->cdg, p->nome, &p->idade, &p->sexo) == 4){
-            printf("%-4d %-30s\t| %4d  |%3c   |\n", p->cdg, p->nome, p->idade, p->sexo);
+        if(sscanf(linha, "%u %[^0-9] %u %c %2d %2d %4d", &p->cdg, p->nome, &p->idade, &p->sexo, &p->Dnasc.dia, &p->Dnasc.mes, &p->Dnasc.ano) == 7){
+            printf("%-4d %-30s\t| %4d  |%3c   | %2d/%2d/%4d   |\n", p->cdg, p->nome, p->idade, p->sexo, p->Dnasc.dia, p->Dnasc.mes, p->Dnasc.ano);
         }
     }
     free(p);
@@ -197,8 +197,8 @@ Pdados* ler_novo_cadastro(){
         scanf("%u", &p->idade);
         printf("Sexo[M/F]: ");
         scanf(" %c", &p->sexo);
-        /*printf("\nAno de nascimento[dd mm aaaa]: ");
-        scanf("%2d %2d %4d", &p->nascimento.dia, &p->nascimento.mes, &p->nascimento.ano);*/
+        printf("Ano de nascimento[dd mm aaaa]: ");
+        scanf("%2d %2d %4d", &p->Dnasc.dia, &p->Dnasc.mes, &p->Dnasc.ano);
         return p;
     }
     else{
@@ -212,6 +212,8 @@ void cadastrar(Pdados *p){
     FILE *aqv;
 
     p->cdg = 0;
+
+    system("cls");
 
     aqv = fopen("ListaUsuarios.txt", "r");
     if(aqv != NULL){
@@ -232,9 +234,11 @@ void cadastrar(Pdados *p){
         return;
     }
     fflush(stdin);
-    fprintf(aqv, "%d %s %d %c\n",p->cdg, p->nome, p->idade, p->sexo);
-    printf("[%d %s %d %c] --> Dados adicionados com sucesso.", p->cdg, p->nome, p->idade, p->sexo);
+    fprintf(aqv, "%d %s %d %c %2d %2d %4d\n",p->cdg, p->nome, p->idade, p->sexo, p->Dnasc.dia, p->Dnasc.mes, p->Dnasc.ano);
+    printf("Codigo: %d\nNome: %s\nIdade: %d\nSexo: %c\nData de nascimento: %2d/%2d/%4d\n", p->cdg, p->nome, p->idade, p->sexo, p->Dnasc.dia, p->Dnasc.mes, p->Dnasc.ano);
+    printf(" --> Dados adicionados com sucesso.<--");
     
+    free(p);
     fclose(aqv);
     system("PAUSE");
 }
@@ -244,9 +248,15 @@ void remover_cadastro(){
         Não receve escopo.
         Remove um certo dado da lista de acordo com a escolha do usuário.
     */
-    Pdados pessoa;
-    char linha[100];
+    Pdados *p;
+    char linha[150];
     unsigned int remover;
+
+    p = malloc(sizeof(Pdados));
+    if(p == NULL){
+        erro();
+        return;
+    }
 
     ver_cadastrados();
 
@@ -267,9 +277,9 @@ void remover_cadastro(){
     }
 
     while(fgets(linha, sizeof(linha), a) != NULL){
-        sscanf(linha, "%u %[^0-9] %u %c", &pessoa.cdg, pessoa.nome, &pessoa.idade, &pessoa.sexo);
-        if(remover != pessoa.cdg){
-             fprintf(b, "%u %s%u %c\n", pessoa.cdg, pessoa.nome, pessoa.idade, pessoa.sexo);
+        sscanf(linha, "%u %[^0-9] %u %c %2d %2d %4d", &p->cdg, p->nome, &p->idade, &p->sexo, &p->Dnasc.dia, &p->Dnasc.mes, &p->Dnasc.ano);
+        if(remover != p->cdg){
+             fprintf(b, "%u %s%u %c %2d %2d %4d\n", p->cdg, p->nome, p->idade, p->sexo, p->Dnasc.dia, p->Dnasc.mes, p->Dnasc.ano);
          }
     }
     fclose(a);
@@ -279,6 +289,7 @@ void remover_cadastro(){
     rename("temp.txt", "ListaUsuarios.txt");
 
     printf("Cadastro removido com sucesso.\n");
+    free(p);
     system("PAUSE");
 }
 
@@ -342,7 +353,8 @@ unsigned int busca(int n){
     */
     FILE *a;
     char linha[100];
-    Pdados pessoa;
+    Pdados *p;
+    p = malloc(sizeof(Pdados));
     unsigned int cdg, flag = 0, flag2 = 0;
 
     a = fopen("ListaUsuarios.txt", "r");
@@ -352,26 +364,26 @@ unsigned int busca(int n){
     }
     else{
         while(fgets(linha, sizeof(linha), a) != NULL){
-            sscanf(linha, "%u %[^0-9] %d %c", &pessoa.cdg, pessoa.nome, &pessoa.idade, &pessoa.sexo);
+            sscanf(linha, "%u %[^0-9] %d %c %2d %2d %4d", &p->cdg, p->nome, &p->idade, &p->sexo, &p->Dnasc.dia, &p->Dnasc.mes, &p->Dnasc.ano);
             if(n == 1){
             //Busca Feminina
-                if(pessoa.sexo == 'F' || pessoa.sexo == 'f'){
+                if(p->sexo == 'F' || p->sexo == 'f'){
                     if(flag2 == 0){
                         printf("Mulheres encontradas: \n");
                         flag2++;
                     }
-                    printf("%d %s %d %c\n", pessoa.cdg, pessoa.nome, pessoa.idade, pessoa.sexo);
+                    printf("%d %s %d %c %2d/%2d/%4d\n", p->cdg, p->nome, p->idade, p->sexo, p->Dnasc.dia, p->Dnasc.mes, p->Dnasc.ano);
                     flag++;
                 }
             }
             if(n == 2){
                 //Busca Masculina
-                if(pessoa.sexo == 'M' || pessoa.sexo == 'm'){
+                if(p->sexo == 'M' || p->sexo == 'm'){
                     if(flag2 == 0){
                         printf("Homens encontrados: \n");
                         flag2++;
                     }
-                        printf("%d %s %d %c\n", pessoa.cdg, pessoa.nome, pessoa.idade, pessoa.sexo);
+                        printf("%d %s %d %c %2d/%2d/%4d\n", p->cdg, p->nome, p->idade, p->sexo, p->Dnasc.dia, p->Dnasc.mes, p->Dnasc.ano);
                         flag++;
                 }
             }
@@ -382,8 +394,8 @@ unsigned int busca(int n){
                     scanf("%u", &cdg);
                     flag2++;
                 }
-                if(pessoa.cdg == cdg){
-                    printf("Usuario: %d %s %d %c\n", pessoa.cdg, pessoa.nome, pessoa.idade, pessoa.sexo);
+                if(p->cdg == cdg){
+                    printf("Usuario: %d %s %d %c %2d/%2d/%4d\n", p->cdg, p->nome, p->idade, p->sexo, p->Dnasc.dia, p->Dnasc.mes, p->Dnasc.ano);
                     flag++;
                 }
             }
@@ -394,12 +406,12 @@ unsigned int busca(int n){
                     scanf("%u", &cdg);
                     flag2++;
                 }
-                if(pessoa.idade == cdg){
+                if(p->idade == cdg){
                     if(flag == 0){
                         printf("Pessoas de %u anos encontradas: \n", cdg);
                         flag++;
                     }
-                    printf("Codigo: %d | Nome --> %s | Sexo --> %c\n", pessoa.cdg, pessoa.nome, pessoa.sexo);
+                    printf("Codigo: %d | Nome --> %s | Sexo --> %c | Aniversario: %2d %2d %4d\n", p->cdg, p->nome, p->sexo, p->Dnasc.dia, p->Dnasc.mes, p->Dnasc.ano);
                 }
             }
         }
@@ -435,7 +447,8 @@ void erro(){
 void novo_arquivo(int n, unsigned int cdg){
     FILE *a, *b;
     char linha[100];
-    Pdados pessoa;
+    Pdados *p;
+    p = malloc(sizeof(Pdados));
     unsigned int flag2 = 0;
 
     // Abre o arquivo de saída uma vez, fora do loop
@@ -459,36 +472,37 @@ void novo_arquivo(int n, unsigned int cdg){
     }
     else{
         while(fgets(linha, sizeof(linha), a) != NULL){
-            sscanf(linha, "%u %[^0-9] %d %c", &pessoa.cdg, pessoa.nome, &pessoa.idade, &pessoa.sexo);
+            sscanf(linha, "%u %[^0-9] %d %c %2d %2d %4d", &p->cdg, p->nome, &p->idade, &p->sexo, &p->Dnasc.dia, &p->Dnasc.mes, &p->Dnasc.ano);
             if(n == 1){
-                if(pessoa.sexo == 'F' || pessoa.sexo == 'f'){
+                if(p->sexo == 'F' || p->sexo == 'f'){
                     if(flag2 == 0){
                         fprintf(b, "Mulheres encontradas: \n");
                         flag2++;
                     }
-                    fprintf(b, "%d %s %d %c\n", pessoa.cdg, pessoa.nome, pessoa.idade, pessoa.sexo);
+                    fprintf(b, "%d %s %d %c %2d %2d %4d\n", p->cdg, p->nome, p->idade, p->sexo, p->Dnasc.dia, p->Dnasc.mes, p->Dnasc.ano);
                 }
             }
             if(n == 2){
-                if(pessoa.sexo == 'M' || pessoa.sexo == 'm'){
+                if(p->sexo == 'M' || p->sexo == 'm'){
                     if(flag2 == 0){
                         fprintf(b, "Homens encontrados: \n");
                         flag2++;
                     }
-                    fprintf(b, "%d %s %d %c\n", pessoa.cdg, pessoa.nome, pessoa.idade, pessoa.sexo);
+                    fprintf(b, "%d %s %d %c %2d %2d %4d\n", p->cdg, p->nome, p->idade, p->sexo, p->Dnasc.dia, p->Dnasc.mes, p->Dnasc.ano);
                 }
             }
             if(n == 4){
-                if(pessoa.idade == cdg){
+                if(p->idade == cdg){
                     if(flag2 == 0){
                         fprintf(b, "Pessoas de %u anos encontradas: \n", cdg);
                         flag2++;
                     }
-                    fprintf(b, "Codigo: %d | Nome --> %s | Sexo --> %c\n", pessoa.cdg, pessoa.nome, pessoa.sexo);
+                    fprintf(b, "Codigo: %d | Nome --> %s | Sexo --> %c | Nascimento --> %2d/%2d/%4d\n", p->cdg, p->nome, p->sexo, p->Dnasc.dia, p->Dnasc.mes, p->Dnasc.ano);
                 }
             }
         }
     }
+    free(p);
     fclose(a);
     fclose(b);
 }
