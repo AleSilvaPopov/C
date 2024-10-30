@@ -222,7 +222,7 @@ void cadastrar(Pdados *p){
         }
         p->cdg += 1;
         fclose(aqv);
-    }
+    }   
     else{
         p->cdg = 1;
     }
@@ -395,7 +395,12 @@ unsigned int busca(int n){
                     flag2++;
                 }
                 if(p->cdg == cdg){
-                    printf("Usuario: %d %s %d %c %2d/%2d/%4d\n", p->cdg, p->nome, p->idade, p->sexo, p->Dnasc.dia, p->Dnasc.mes, p->Dnasc.ano);
+                    //printf("Usuario: %d %s %d %c %2d/%2d/%4d\n", p->cdg, p->nome, p->idade, p->sexo, p->Dnasc.dia, p->Dnasc.mes, p->Dnasc.ano);
+
+                    printf("Nome: %s\n", p->nome);
+                    printf("Idade: %d\n", p->idade);
+                    printf("Sexo: %C\n", p->sexo);
+                    printf("Data de nascimento: %2d/%2d/%4d\n", p->Dnasc.dia, p->Dnasc.mes, p->Dnasc.ano);
                     flag++;
                 }
             }
