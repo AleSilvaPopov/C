@@ -452,7 +452,7 @@ void erro(){
 void novo_arquivo(int n, unsigned int cdg){
     FILE *a, *b;
     char linha[100];
-    Pdados *p;
+    Pdados *p;  
     p = malloc(sizeof(Pdados));
     unsigned int flag2 = 0;
 
