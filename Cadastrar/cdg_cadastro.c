@@ -11,12 +11,13 @@ typedef struct{
     int ano;
 }data;
 
-typedef struct{
+typedef struct n{
     unsigned int cdg;
     char nome[100];
     unsigned int idade;
     char sexo;
     data Dnasc;
+    //struct n *prox;
 }Pdados;
 
 //Modulos.
@@ -31,6 +32,7 @@ void procura();
 unsigned int busca(int);
 void erro();
 void novo_arquivo(int, unsigned int);
+int evazio_aqv();
 
 int main(){
     setlocale(LC_ALL, "Portuguese"); // Deixar em Português.
@@ -251,19 +253,15 @@ void remover_cadastro(){
     Pdados *p;
     char linha[150];
     unsigned int remover;
+    FILE *a, *b;
 
-    p = malloc(sizeof(Pdados));
-    if(p == NULL){
-        erro();
+    if(evazio_aqv() == 1){
+        printf("\n\tLista vazia.\n");
+        printf("\tVoltando pro menu.\n");
+        Sleep(2000);
         return;
     }
 
-    ver_cadastrados();
-
-    printf("Digite o código de quem deseja remover da lista: ");
-    scanf("%u", &remover);
-
-    FILE *a, *b;
     a = fopen("ListaUsuarios.txt", "r");
     if(a == NULL){
         printf("Erro, ao abrir o arquivo .txt.\n");
@@ -275,6 +273,19 @@ void remover_cadastro(){
         fclose(a);
         return;
     }
+
+    p = malloc(sizeof(Pdados));
+    if(p == NULL){
+        erro();
+        fclose(a);
+        fclose(b);
+        return;
+    }
+
+    ver_cadastrados();
+
+    printf("Digite o código de quem deseja remover da lista: ");
+    scanf("%u", &remover);
 
     while(fgets(linha, sizeof(linha), a) != NULL){
         sscanf(linha, "%u %[^0-9] %u %c %2d %2d %4d", &p->cdg, p->nome, &p->idade, &p->sexo, &p->Dnasc.dia, &p->Dnasc.mes, &p->Dnasc.ano);
@@ -510,4 +521,20 @@ void novo_arquivo(int n, unsigned int cdg){
     free(p);
     fclose(a);
     fclose(b);
+}
+
+//Verifica se o arquivo é vazio.
+int evazio_aqv(){
+    char linha[150];
+    FILE *a;
+    a = fopen("ListaUsuarios.txt", "r");
+
+    if(fgets(linha, sizeof(linha), a) == NULL){
+        fclose(a);
+        return 1; // Retorna 1 se for vazio.
+    }
+    else{
+        fclose(a);
+        return 0; // Retorna 0 se não for vazio.
+    }
 }
