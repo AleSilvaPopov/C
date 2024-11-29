@@ -33,6 +33,7 @@ unsigned int busca(int);
 void erro();
 void novo_arquivo(int, unsigned int);
 int evazio_aqv();
+void limpar_lista();
 
 int main(){
     setlocale(LC_ALL, "Portuguese"); // Deixar em Português.
@@ -68,7 +69,7 @@ int main(){
                 procura(); //Procura na lista, de acordo com a escolha do usuário(Ex: Um nome, Sexo, Idade etc.)
                 break;
             case '5':
-                //??????
+                limpar_lista();
                 break;
             case '6':
             //Finaliza o código.
@@ -110,7 +111,7 @@ void menu(int n){
     printf("|\t[2]Ver lista.\t                |\n");
     printf("|\t[3]Tirar nome da lista\t        |\n");
     printf("|\t[4]Procurar na lista.\t        |\n");
-    //printf("|\t[5]?????????????????.\t        |\n");
+    printf("|\t[5]Limpar lista\t                |\n");
     printf("|\t[6]Sair do programa.\t        |\n");
     printf("-----------------------------------------");
     printf("\n\tDigite sua escolha: ");
@@ -354,7 +355,7 @@ void procura(){
             erro();
             break;
         }
-        if(escolha != 5 && escolha != 3){
+        if(escolha != 5 && escolha != 3 && r != 1){
             printf("Deseja um arquivo com essa lista:[S/N]: ");
             scanf(" %c", &Narq);
             if(Narq == 'S' || Narq == 's'){
@@ -441,6 +442,8 @@ unsigned int busca(int n){
     }
     if(flag == 0){
         printf("Ninguém com essas informações encontrado.\n");
+        system("pause");
+        return 1;
     }
     system("pause");
     if(n == 4){
@@ -544,4 +547,11 @@ int evazio_aqv(){
         fclose(a);
         return 0; // Retorna 0 se não for vazio.
     }
+}
+
+void limpar_lista(){
+    remove("ListaUsuarios.txt");
+    void criar_arquivo();
+    printf("\n\tArquivo limpo com sucesso\n");
+    system("PAUSE");
 }
