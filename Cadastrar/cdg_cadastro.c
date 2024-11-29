@@ -110,7 +110,7 @@ void menu(int n){
     printf("|\t[2]Ver lista.\t                |\n");
     printf("|\t[3]Tirar nome da lista\t        |\n");
     printf("|\t[4]Procurar na lista.\t        |\n");
-    printf("|\t[5]?????????????????.\t        |\n");
+    //printf("|\t[5]?????????????????.\t        |\n");
     printf("|\t[6]Sair do programa.\t        |\n");
     printf("-----------------------------------------");
     printf("\n\tDigite sua escolha: ");
@@ -145,6 +145,13 @@ void ver_cadastrados(){
         Mostra uma lista com todos os dados cadastrados.
     */
     FILE *aqv;
+
+    if(evazio_aqv() == 1){
+        printf("\n\tLista vazia.\n");
+        printf("\tVoltando pro menu.\n");
+        Sleep(2000);
+        return;
+    }
 
     aqv = fopen("ListaUsuarios.txt", "r");
     if(aqv == NULL){
@@ -523,8 +530,8 @@ void novo_arquivo(int n, unsigned int cdg){
     fclose(b);
 }
 
-//Verifica se o arquivo é vazio.
 int evazio_aqv(){
+    //Verifica se o arquivo é vazio.
     char linha[150];
     FILE *a;
     a = fopen("ListaUsuarios.txt", "r");
