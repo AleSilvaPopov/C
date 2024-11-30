@@ -1,6 +1,6 @@
 # Cadastrar_Usuario :exploding_head:
 ***
-##Principal
+## Principal
 O programa lê o **nome, idade, sexo e data de nascimento**, e salva em um arquivo com um código  inserido automaticamente que começa em 1 indo até o números de cadastrados.
 
 ## Remove
