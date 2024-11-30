@@ -11,13 +11,12 @@ typedef struct{
     int ano;
 }data;
 
-typedef struct n{
+typedef struct {
     unsigned int cdg;
     char nome[100];
     unsigned int idade;
     char sexo;
     data Dnasc;
-    //struct n *prox;
 }Pdados;
 
 //Modulos.
