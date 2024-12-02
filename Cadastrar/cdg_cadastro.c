@@ -550,7 +550,7 @@ int evazio_aqv(){
 
 void limpar_lista(){
     remove("ListaUsuarios.txt");
-    void criar_arquivo();
+    //void criar_arquivo();
     printf("\n\tArquivo limpo com sucesso\n");
     system("PAUSE");
 }
