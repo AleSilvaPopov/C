@@ -77,6 +77,6 @@ int dv(int s){
         return 0;
     }
     else{
-        return 11 - s % 11;;
+        return 11 - s % 11;
     }
 }
