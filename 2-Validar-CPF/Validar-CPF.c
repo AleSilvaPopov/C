@@ -48,7 +48,7 @@ CPF* ler_CPF(){
     return ptr;
 }
 
-int DV1(CPF *ptr){
+int DV1(CPF *ptr){//406.947.548-62
     int i, j, soma = 0;
     CPF *temp = malloc(sizeof(CPF));
 
