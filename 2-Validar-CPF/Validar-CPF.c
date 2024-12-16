@@ -10,7 +10,7 @@ typedef struct{
 CPF* ler_CPF();
 int DV1(CPF*);
 int DV2(CPF*);
-int dv(int);
+int DVF(int);
 
 int main(){
     CPF *ptr;
@@ -57,7 +57,7 @@ int DV1(CPF *ptr){//406.947.548-62
         soma = soma + temp->dgt[j];
     }
     free(temp);
-    return dv(soma);
+    return DVF(soma);
 }
 
 int DV2(CPF *ptr){
@@ -67,12 +67,12 @@ int DV2(CPF *ptr){
         temp->dgt[j] = ptr->dgt[j] * i;
         soma = soma + temp->dgt[j];
     }
-    soma = soma + DV1(ptr) * 2;
+    soma = soma + (ptr->DVs[0] * 2); //DV1(ptr) * 2;
     free(temp);
-    return dv(soma);
+    return DVF(soma);
 }
 
-int dv(int s){
+int DVF(int s){
     if(s % 11 < 2){
         return 0;
     }

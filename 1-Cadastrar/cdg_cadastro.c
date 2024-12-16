@@ -354,7 +354,7 @@ void procura(){
             erro();
             break;
         }
-        if(escolha != 5 && escolha != 3 && r != 1){
+        if(escolha != 5 && escolha != 3 && r != 1 && escolha < 6 && escolha > 0){
             printf("Deseja um arquivo com essa lista:[S/N]: ");
             scanf(" %c", &Narq);
             if(Narq == 'S' || Narq == 's'){
