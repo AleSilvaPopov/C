@@ -25,7 +25,7 @@ Pdados* ler_novo_cadastro();
 void cadastrar();
 void ver_cadastrados();
 void menu(int);
-int vereficar_arv();
+int vereficar_arq();
 void remover_cadastro();
 void procura();
 unsigned int busca(int);
@@ -40,7 +40,7 @@ int main(){
     Pdados *pessoa;
     
     // verificar se já existe um arquivo .txt se não existir cria um.
-    if(vereficar_arv() == 1){
+    if(vereficar_arq() == 1){
         criar_arquivo();
     }
     else{
@@ -177,18 +177,18 @@ void ver_cadastrados(){
     system("pause");
 }
 
-int vereficar_arv(){
+int vereficar_arq(){
     /*
-        Não recebe escopo.
+        Não recebe parâmetros.
         Verifica se já existe um arquivo com dados salvos.
      */
-    FILE *a;
-    a = fopen("ListaUsuarios.txt", "r");
+    FILE *a = fopen("ListaUsuarios.txt", "r");
     if(a == NULL){
-        fclose(a);
+        //Aruivo não existe.
         return 1;
     }
     else{
+        //Arquivo existe.
         fclose(a);
         return 0;
     }
