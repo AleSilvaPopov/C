@@ -1,15 +1,17 @@
 #include <iostream>
 #include <string>
 
+
 using namespace std;
 
 int main() {
     int n, x, p, m, g;
-    string tamanho;
     int totalmuros = 1;
+    string tamanho;
 
-    cin >> n >> x; 
-    cin >> tamanho; 
+
+    cin >> n >> x;
+    cin >> tamanho;
     cin >> p >> m >> g;
 
     int alturamuro = x;
@@ -19,21 +21,22 @@ int main() {
 
         if (tamanho[i] == 'P') {
             tamanhotitan = p;
-        } else if (tamanho[i] == 'M') {
+        } else if (tamanho[i] == 'M' ) {
             tamanhotitan = m;
         } else {
             tamanhotitan = g;
         }
 
-        if (tamanhotitan > alturamuro) {
-            totalmuros += (tamanhotitan - 1) / x; 
-            alturamuro = x - (tamanhotitan % x);
-            
-            if (alturamuro == x) {
-                alturamuro = 0;
-            }
-        } else {
+        if (alturamuro >= tamanhotitan) {
             alturamuro -= tamanhotitan;
+        } else {
+            totalmuros++;
+            alturamuro = x;
+            alturamuro -= tamanhotitan;
+        }
+        if(alturamuro == 0) {
+            totalmuros++;
+            alturamuro = x;
         }
     }
     cout << totalmuros << endl;
