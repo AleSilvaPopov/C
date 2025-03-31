@@ -56,6 +56,4 @@ dkms.conf
 #Ignorar a pasta .vscode
 .vscode/
 Beecrowd/.vscode/
-Beecrowd/output/
 2-Validar-CPF/.vscode/
-1-Cadastrar/output/
