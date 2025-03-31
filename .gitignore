@@ -53,5 +53,5 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
-
+#Ignorar a pasta .vscode
 .vscode/
