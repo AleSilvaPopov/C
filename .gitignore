@@ -55,7 +55,3 @@ dkms.conf
 
 #Ignorar a pasta .vscode
 .vscode/
-
-git rm -r --cached .vscode/
-.vscode/*
-!.vscode/settings.json
