@@ -254,7 +254,6 @@ void cadastrar(Pdados *p){
 
 void remover_cadastro(){
     /*
-        Não receve escopo.
         Remove um certo dado da lista de acordo com a escolha do usuário.
     */
     Pdados *p;
@@ -297,7 +296,7 @@ void remover_cadastro(){
     while(fgets(linha, sizeof(linha), a) != NULL){
         sscanf(linha, "%u %[^0-9] %u %c %2d %2d %4d", &p->cdg, p->nome, &p->idade, &p->sexo, &p->Dnasc.dia, &p->Dnasc.mes, &p->Dnasc.ano);
         if(remover != p->cdg){
-             fprintf(b, "%u %s%u %c %2d %2d %4d\n", p->cdg, p->nome, p->idade, p->sexo, p->Dnasc.dia, p->Dnasc.mes, p->Dnasc.ano);
+             fprintf(b, "%u %s %u %c %2d %2d %4d\n", p->cdg, p->nome, p->idade, p->sexo, p->Dnasc.dia, p->Dnasc.mes, p->Dnasc.ano);
          }
     }
     fclose(a);
