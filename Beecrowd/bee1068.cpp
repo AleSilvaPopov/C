@@ -22,7 +22,7 @@ int main(){
             }
         }
 
-        if(!erro && cont ==0){
+        if(!erro && cont == 0){
             cout << "correct\n";
         }
         else{
