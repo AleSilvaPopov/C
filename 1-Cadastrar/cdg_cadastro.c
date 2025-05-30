@@ -102,6 +102,7 @@ int main(){
 
 //Menu com todas as opções.
 void menu(int n){
+    setlocale(LC_ALL, "Portuguese"); // Deixar em Português.
     if(n == 1){
         printf("-----------------------------------------");
     printf("\n|\t    Menu Principal\t        |\n");
@@ -125,6 +126,8 @@ void menu(int n){
 }
 
 void criar_arquivo(){
+    setlocale(LC_ALL, "Portuguese"); // Deixar em Português.
+
     FILE *aqv;
     aqv = fopen("ListaUsuarios.txt", "w");
     if(aqv == NULL){
@@ -140,6 +143,7 @@ void criar_arquivo(){
 }
 
 void ver_cadastrados(){
+    setlocale(LC_ALL, "Portuguese"); // Deixar em Português.
     /*
         Não recebe escopo.
         Mostra uma lista com todos os dados cadastrados.
@@ -195,6 +199,7 @@ int vereficar_arq(){
 }
 
 Pdados* ler_novo_cadastro(){
+    setlocale(LC_ALL, "Portuguese"); // Deixar em Português.
     Pdados *p;
     p = malloc(sizeof(Pdados));
 
@@ -217,6 +222,7 @@ Pdados* ler_novo_cadastro(){
 }
 
 void cadastrar(Pdados *p){
+    setlocale(LC_ALL, "Portuguese"); // Deixar em Português.
     char linha[100];
     FILE *aqv;
 
@@ -253,6 +259,7 @@ void cadastrar(Pdados *p){
 }
 
 void remover_cadastro(){
+    setlocale(LC_ALL, "Portuguese"); // Deixar em Português.
     /*
         Remove um certo dado da lista de acordo com a escolha do usuário.
     */
@@ -299,6 +306,7 @@ void remover_cadastro(){
              fprintf(b, "%u %s %u %c %2d %2d %4d\n", p->cdg, p->nome, p->idade, p->sexo, p->Dnasc.dia, p->Dnasc.mes, p->Dnasc.ano);
          }
     }
+
     fclose(a);
     fclose(b);
 
@@ -311,6 +319,7 @@ void remover_cadastro(){
 }
 
 void procura(){
+    setlocale(LC_ALL, "Portuguese"); // Deixar em Português.
     /*
         Da novas opçôes de busca para o usuário.
     */
@@ -365,6 +374,7 @@ void procura(){
 }
 
 unsigned int busca(int n){
+    setlocale(LC_ALL, "Portuguese"); // Deixar em Português.
     /*
         Busca algo na lista de acordo com a escolha do usuario.
     */
@@ -453,6 +463,7 @@ unsigned int busca(int n){
 }
 
 void erro(){
+    setlocale(LC_ALL, "Portuguese"); // Deixar em Português.
     int cont;
     system("cls");
                 cont = 3;
@@ -469,6 +480,7 @@ void erro(){
 }
 
 void novo_arquivo(int n, unsigned int cdg){
+    setlocale(LC_ALL, "Portuguese"); // Deixar em Português.
     FILE *a, *b;
     char linha[100];
     Pdados *p;  
@@ -532,6 +544,7 @@ void novo_arquivo(int n, unsigned int cdg){
 }
 
 int evazio_aqv(){
+    setlocale(LC_ALL, "Portuguese"); // Deixar em Português.
     //Verifica se o arquivo é vazio.
     char linha[150];
     FILE *a;
@@ -548,6 +561,7 @@ int evazio_aqv(){
 }
 
 void limpar_lista(){
+    setlocale(LC_ALL, "Portuguese"); // Deixar em Português.
     remove("ListaUsuarios.txt");
     //void criar_arquivo();
     printf("\n\tArquivo limpo com sucesso\n");
