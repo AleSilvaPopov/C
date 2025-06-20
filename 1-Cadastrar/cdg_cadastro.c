@@ -313,6 +313,8 @@ void remover_cadastro(){
     remove("ListaUsuarios.txt");
     rename("temp.txt", "ListaUsuarios.txt");
 
+    fclose(b);
+
     printf("Cadastro removido com sucesso.\n");
     free(p);
     system("PAUSE");
